@@ -8,7 +8,7 @@ export const Header = () => {
                            className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-white mr-4">
                             Home
                         </a>
-                        <a href="products"
+                        <a href="products-csr"
                            className="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-white mr-4">
                             Products
                         </a>
