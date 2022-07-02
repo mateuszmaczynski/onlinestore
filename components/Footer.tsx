@@ -9,7 +9,7 @@ export const Footer = () => {
             <div className="sm:flex sm:items-center sm:justify-between text-center">
                 <Link href="/products-csr" className="hover:underline">
                     <a className="flex items-center mb-4 sm:mb-0 mr-6 text-white">
-                        Products
+                        Products(CSR)
                     </a>
                 </Link>
                 <Link href="/contact" className="hover:underline">

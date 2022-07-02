@@ -33,7 +33,7 @@ export const ProductListItem = ({
     }
 }: ProductListItemProps) => {
     return (
-        <div className="p-2 border-2 border-sky-500 rounded-lg">
+        <div className="p-2 border-2 border-sky-500 rounded-lg shad ow-2xl">
             <Link href={`/products/${id}`}>
                 <a>
                     <div className="w-full p-4">
@@ -82,8 +82,8 @@ export const ProductDetails = ({
    }
 }: ProductDetailsProps) => {
     return (
-        <div className="p-8 w-full">
-            <h2 className=" text-2xl font-bold py-8 ">{title}</h2>
+        <div className="p-4 w-full" >
+            <h2 className=" text-2xl font-bold py-8 ">{`${title} - ${price} zł/szt`}</h2>
             <div>
                 <Image
                     src={thumbnailUrl}
@@ -96,7 +96,6 @@ export const ProductDetails = ({
                 />
             </div>
             <p className="p-8">{description}</p>
-            <div className="p-4">{price}</div>
             <Rating rating={rating}/>
         </div>
     )

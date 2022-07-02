@@ -27,15 +27,16 @@ const ProductIdPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>)
         <div>
             <Header />
             <Main>
-                <div className="p-16">
+                <div className="pt-2 pl-2">
                     <Link href="/products-csr">
-                        <a>Wróć</a>
+                        <a>Wróć do strony głównej</a>
                     </Link>
                 </div>
-                <ul className="w-full my-4">
+                <ul className="w-full mb-2">
                     <li key={data.id}>
                         <ProductDetails data={{
                             description: data.description,
+                            id: data.id,
                             price: data.price,
                             rating: data.rating.rate,
                             thumbnailUrl: data.image,
@@ -49,18 +50,38 @@ const ProductIdPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>)
         </div>
     );
 };
-
 export default ProductIdPage;
 
-export const getStaticProps = async ({params}: GetStaticPropsContext<{id: string}>) => {
-    if(!params?.id){
+
+
+export const getStaticPaths = async () => {
+    const res = await fetch('https://naszsklep-api.vercel.app/api/products');
+    const data: StoreApiResponse[] = await res.json();
+
+    return {
+        paths: data.map((product) => {
+            return {
+                params: {
+                    productId: product.id.toString(),
+                },
+            };
+        }),
+        fallback: false,
+    }
+}
+
+export const getStaticProps = async ({
+    params
+}: InferGetStaticPaths<typeof getStaticPaths>) => {
+
+    if(!params?.productId){
         return {
             props: {},
             notFound: true,
         }
     }
 
-    const res = await fetch(`https://naszsklep-api.vercel.app/api/products/${params.id}`);
+    const res = await fetch(`https://naszsklep-api.vercel.app/api/products/${params.productId}`);
     const data: StoreApiResponse | null = await res.json();
 
     return {
@@ -69,3 +90,9 @@ export const getStaticProps = async ({params}: GetStaticPropsContext<{id: string
         },
     };
 };
+
+export type InferGetStaticPaths<T> = T extends () => Promise<{
+        paths: Array<{ params: infer R }>;
+    }>
+    ? { params?: R }
+    : never;
