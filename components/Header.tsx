@@ -21,8 +21,6 @@ export const Header = () => {
                                 Contact
                             </a>
                         </Link>
-
-
                     </div>
                 </div>
             </nav>

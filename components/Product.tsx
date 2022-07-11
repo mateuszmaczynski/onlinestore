@@ -88,7 +88,7 @@ export const ProductDetails = ({
                 <Image
                     src={thumbnailUrl}
                     alt={thumbnailAlt}
-                    className="w-full h-full lg:w-full lg:h-full mix-blend-multiply"
+                    className="w-full  h-full lg:w-full lg:h-full mix-blend-multiply"
                     width={16}
                     height={9}
                     layout="responsive"
