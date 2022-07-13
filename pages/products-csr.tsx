@@ -1,6 +1,4 @@
-import react, {useState} from "react";
-import { Footer } from "../components/Footer";
-import { Header } from "../components/Header";
+import  {useState} from "react";
 import { Main } from "../components/Main";
 import { ProductListItem } from "../components/Product";
 import { useQuery } from "react-query";
@@ -41,7 +39,6 @@ const ProductPageCSR = () => {
 
   return (
       <div className=" flex flex-col min-h-screen ">
-        <Header />
         <Main>
           <div className="p-16">
             <ul className="w-full grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
@@ -60,7 +57,6 @@ const ProductPageCSR = () => {
           </div>
           {/*<Pagination />*/}
         </Main>
-        <Footer />
       </div>
   );
 };

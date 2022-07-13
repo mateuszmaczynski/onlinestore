@@ -1,11 +1,8 @@
-import {Footer} from "../components/Footer";
-import {Header} from "../components/Header";
 import {Main} from "../components/Main";
 
 const HomePage = () => {
     return (
         <div className=" flex flex-col min-h-screen ">
-            <Header/>
             <Main>
                 <div className="p-16">
                     <h2 className="text-2xl font-bold tracking-tight text-gray-600 pb-5">O firmie</h2>
@@ -20,7 +17,6 @@ const HomePage = () => {
                     </article>
                 </div>
             </Main>
-            <Footer/>
         </div>
     );
 };
