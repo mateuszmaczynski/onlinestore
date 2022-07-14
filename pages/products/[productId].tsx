@@ -1,5 +1,3 @@
-import { Footer } from "../../components/Footer";
-import { Header } from "../../components/Header";
 import { Main } from "../../components/Main";
 import { ProductDetails } from "../../components/Product";
 import Link from "next/link";
@@ -8,6 +6,7 @@ import {GetStaticProps, GetStaticPropsContext, InferGetStaticPropsType} from "ne
 export interface StoreApiResponse {
     category: string;
     description: string;
+    longDescription: string;
     id: number;
     image: string;
     price: number;
@@ -25,7 +24,6 @@ const ProductIdPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>)
 
     return (
         <div>
-            <Header />
             <Main>
                 <div className="pt-2 pl-2">
                     <Link href="/products-csr">
@@ -37,6 +35,7 @@ const ProductIdPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>)
                         <ProductDetails data={{
                             description: data.description,
                             id: data.id,
+                            longDescription: data.longDescription,
                             price: data.price,
                             rating: data.rating.rate,
                             thumbnailUrl: data.image,
@@ -46,7 +45,6 @@ const ProductIdPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>)
                     </li>
                 </ul>
             </Main>
-            <Footer />
         </div>
     );
 };
