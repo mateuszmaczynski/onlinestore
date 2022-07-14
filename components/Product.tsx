@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {Rating} from "./Rating";
 import ReactMarkdown from "react-markdown";
-
+import {NextSeo} from "next-seo";
 
 interface ProductDetails {
     description: string;
@@ -89,6 +89,24 @@ export const ProductDetails = ({
     return (
         <div className="p-4 w-full" >
             <h2 className=" text-2xl font-bold py-8 ">{`${title} - ${price} zł/szt`}</h2>
+            <NextSeo
+                title={title}
+                description={description}
+                canonical={`https://onlinestore-nine.vercel.app/${id}`}
+                openGraph={{
+                    url: `https://onlinestore-nine.vercel.app/${id}`,
+                    title: title,
+                    description: description,
+                    images: [
+                        {
+                            url: thumbnailUrl,
+                            alt: thumbnailAlt,
+                            type: 'image/jpeg',
+                        },
+                    ],
+                    site_name: 'Najlepszy sklep internetowy',
+                }}
+            />
             <div>
                 <Image
                     src={thumbnailUrl}
