@@ -1,13 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import {Rating} from "./Rating";
-import ReactMarkdown from "react-markdown";
 import {NextSeo} from "next-seo";
+import {HandlingUrlReactMarkdown} from "../components/HandlingUrlReactMarkdown";
+import {MDXRemote, MDXRemoteSerializeResult} from "next-mdx-remote";
 
 interface ProductDetails {
     description: string;
     id: number;
-    longDescription: string;
+    longDescription: MDXRemoteSerializeResult<Record<string, unknown>>;
     price: number;
     rating: number;
     thumbnailUrl: string;
@@ -120,7 +121,10 @@ export const ProductDetails = ({
             </div>
             <p className="p-8">{description}</p>
             <article className={"p-4 prose lg:prose-xl"}>
-                <ReactMarkdown>{longDescription}</ReactMarkdown>
+                //executed on server
+                <MDXRemote { ...longDescription } />
+                //executed on client
+                {/*<HandlingUrlReactMarkdown id={id}>{longDescription}</HandlingUrlReactMarkdown>*/}
             </article>
             <Rating rating={rating}/>
         </div>
