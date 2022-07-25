@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CartBar from "./Cart/CartBar";
 
 export const Header = () => {
     return (
@@ -23,6 +24,7 @@ export const Header = () => {
                         </Link>
                     </div>
                 </div>
+                <CartBar />
             </nav>
         </header>
     )
