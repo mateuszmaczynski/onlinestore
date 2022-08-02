@@ -2,8 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import {Rating} from "./Rating";
 import {NextSeo} from "next-seo";
-import {HandlingUrlReactMarkdown} from "../components/HandlingUrlReactMarkdown";
+// import {HandlingUrlReactMarkdown} from "../components/HandlingUrlReactMarkdown";
 import {MDXRemote, MDXRemoteSerializeResult} from "next-mdx-remote";
+import {useCartState} from "./Cart/CartContext";
 
 interface ProductDetails {
     description: string;
@@ -36,6 +37,7 @@ export const ProductListItem = ({
         title
     }
 }: ProductListItemProps) => {
+    const cartState = useCartState();
     return (
         <div className="p-2 border-2 border-sky-500 rounded-lg shad ow-2xl">
             <Link href={`/products/${id}`}>
@@ -53,12 +55,10 @@ export const ProductListItem = ({
                     </div>
                     <div className="mt-4 flex justify-between">
                         <div>
-                            <h3 className="text-sm text-black">
-
+                            <h3 className="text-md text-black">
                                 <span aria-hidden="true">
                                     {title}
                                 </span>
-
                             </h3>
                         </div>
 
@@ -70,6 +70,16 @@ export const ProductListItem = ({
             </Link>
             <div className="pt=4">
                 <Rating rating={rating}/>
+            </div>
+            <div className="flex justify-center mt-4">
+                <button onClick={() => cartState.addItemToCart({
+                    id,
+                    price,
+                    title,
+                    count: 1
+                })} className="text-white bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg px-5 py-2.5 text-center mr-2 mb-2">
+                    Dodaj do koszyka
+                </button>
             </div>
         </div>
     )
