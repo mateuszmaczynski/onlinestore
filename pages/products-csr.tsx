@@ -38,7 +38,7 @@ const ProductPageCSR = () => {
   }
 
   return (
-      <div className=" flex flex-col min-h-screen ">
+      <div className="flex flex-col min-h-screen ">
         <Main>
           <div className="p-16">
             <ul className="w-full grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">

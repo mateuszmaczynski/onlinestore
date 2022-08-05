@@ -1,4 +1,5 @@
 import {useCartState} from "../components/Cart/CartContext";
+import { Main } from "../components/Main";
 
 const CartContent = () => {
     const cartItems = useCartState();
@@ -41,20 +42,28 @@ const CartSummary = () => {
     const cartItems = useCartState();
 
     return (
-    <div>
-        Podsumowanie:
-        <div className="font-bold">Liczba elementów: {cartItems.items.length}</div>
+    <div className="mt-2">
+        {cartItems.items.length >=1 && (
+            <>
+                Podsumowanie:
+                <div className="font-bold">Liczba elementów: {cartItems.items.length}</div>
+            </>
+        )}
     </div>
     )
 }
 const CartPage = () => {
-
+    const cartItems = useCartState();
     return (
-        <div className="max-w-5xl mx-audo p-4">
-            <div className="grid grid-cols-3 gap-8">
-                <CartContent />
-                <CartSummary />
-            </div>
+        <div className="flex min-h-screen">
+            <Main>
+                {/*<div className="max-w-5xl mx-auto p-4">*/}
+                    <div className="grid grid-cols-3 gap-8">
+                        <CartContent />
+                        <CartSummary />
+                     </div>
+                {/*</div>*/}
+            </Main>
         </div>
     )
 }
