@@ -1,8 +1,9 @@
 import { Main } from "../../components/Main";
-// import {Pagination} from "../../components/Pagination";
 import { ProductListItem } from "../../components/Product";
 import {InferGetStaticPropsType} from "next";
-
+import {apolloClient} from "../../graphql/apolloClient";
+import { gql } from "@apollo/client";
+// import {Pagination} from "../../components/Pagination";
 
 // SSG
 interface StoreApiResponse {
@@ -11,10 +12,11 @@ interface StoreApiResponse {
     id: number;
     image: string;
     price: number;
-    rating: {
-        rate: number;
-        count: number;
-    };
+    // rating: {
+    //     rate: number;
+    //     count: number;
+    // };
+    rating: number;
     title: string;
 }
 
@@ -24,14 +26,14 @@ const ProductPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) =
             <Main>
                 <div className="p-16">
                     <ul className="w-full grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
-                        {data.map((product) => (
-                            <ProductListItem key={product.id} data={{
-                                id: product.id,
+                        {data.products.map((product) => (
+                            <ProductListItem key={product.slug} data={{
+                                id: product.slug,
                                 price: product.price,
-                                rating: product.rating.rate,
-                                thumbnailUrl: product.image,
-                                thumbnailAlt: product.title,
-                                title: product.title
+                                rating: product.rating,
+                                thumbnailUrl: product.images[0].url,
+                                thumbnailAlt: product.name,
+                                title: product.name
                             }}
                             />
                         ))}
@@ -46,8 +48,23 @@ const ProductPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) =
 export default ProductPage;
 
 export const getStaticProps = async () => {
-    const res = await fetch('https://naszsklep-api.vercel.app/api/products');
-    const data: StoreApiResponse[] = await res.json();
+    // const res = await fetch('https://naszsklep-api.vercel.app/api/products');
+    // const data: StoreApiResponse[] = await res.json();
+    const { data,  } = await apolloClient.query<GetProductsListResponse>({
+        query: gql`
+            query GetProductsList {
+                products {
+                    slug
+                    name
+                    price
+                    rating
+                    images(first: 1){
+                        url
+                    }
+                }
+            }
+        `
+    })
 
     return {
         props: {
@@ -55,3 +72,19 @@ export const getStaticProps = async () => {
         }
     }
 };
+
+export interface GetProductsListResponse {
+    products: Product[];
+}
+
+export interface Product {
+    slug: string;
+    name: string;
+    price: number;
+    rating: number
+    images: Image[];
+}
+
+export interface Image {
+    url: string;
+}
