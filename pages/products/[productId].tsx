@@ -4,23 +4,28 @@ import Link from "next/link";
 import {GetStaticProps, GetStaticPropsContext, InferGetStaticPropsType} from "next";
 import {serialize} from "next-mdx-remote/serialize";
 import {apolloClient} from "../../graphql/apolloClient";
-import {gql} from "@apollo/client";
-import {GetProductsListResponse, Product} from "./index";
+// import {gql} from "@apollo/client";
 
-export interface StoreApiResponse {
-    category: string;
-    description: string;
-    longDescription: string;
-    id: string;
-    image: string;
-    price: number;
-    // rating: {
-    //     rate: number;
-    //     count: number;
-    // };
-    rating: number;
-    title: string;
-}
+import {
+    GetProductDetailsBySlugDocument,
+    GetProductDetailsBySlugQuery,
+    GetProductDetailsBySlugQueryVariables, GetProductsSlugsDocument, GetProductsSlugsQuery
+} from "../../generated/graphql";
+
+// export interface StoreApiResponse {
+//     category: string;
+//     description: string;
+//     longDescription: string;
+//     id: string;
+//     image: string;
+//     price: number;
+//     // rating: {
+//     //     rate: number;
+//     //     count: number;
+//     // };
+//     rating: number;
+//     title: string;
+// }
 
 const ProductIdPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) => {
     if(!data) {
@@ -42,7 +47,7 @@ const ProductIdPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>)
                             id: data.slug,
                             longDescription: data.longDescription,
                             price: data.price,
-                            rating: data.rating,
+                            rating: 5,
                             thumbnailUrl: data.images[0].url,
                             thumbnailAlt: data.name,
                             title: data.name
@@ -56,24 +61,11 @@ const ProductIdPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>)
 export default ProductIdPage;
 
 export const getStaticPaths = async () => {
-    interface GetProductsSlugsResponse {
-        products: Product[];
-    }
-
-    interface Product {
-        slug: string;
-    }
 
     // const res = await fetch('https://naszsklep-api.vercel.app/api/products');
     // const data: StoreApiResponse[] = await res.json();
-    const { data,  } = await apolloClient.query<GetProductsSlugsResponse>({
-        query: gql`
-            query GetProductsSlugs {
-                products {
-                    slug
-                }
-            }
-        `
+    const { data,  } = await apolloClient.query<GetProductsSlugsQuery>({
+        query: GetProductsSlugsDocument
     })
 
     return {
@@ -99,49 +91,20 @@ export const getStaticProps = async ({
         }
     }
 
-    interface GetProductDetailsBySlugResponse {
-        product: Product;
-    }
-
-    interface Product {
-        slug: string;
-        name: string;
-        price: number;
-        description: string;
-        images: Image[];
-        rating: number;
-    }
-
-    interface Image {
-        url: string;
-    }
-
     const { data } = await apolloClient.query<
-    GetProductDetailsBySlugResponse,
-    {slug: string}
+    GetProductDetailsBySlugQuery,
+    GetProductDetailsBySlugQueryVariables
     >({
         variables: {
             slug: params?.productId
         },
-        query: gql`
-            query GetProductDetailsBySlug($slug: String) {
-                product(where: {slug: $slug}) {
-                name
-                price
-                description
-                images {
-                    url
-                }
-                slug
-                }
-            }
-        `
+        query: GetProductDetailsBySlugDocument
     })
     
     // const res = await fetch(`https://naszsklep-api.vercel.app/api/products/${params.productId}`);
     // const data: StoreApiResponse | null = await res.json();
 
-    if (!data){
+    if (!data.product){
         return {
             props: {},
             notFound: true,

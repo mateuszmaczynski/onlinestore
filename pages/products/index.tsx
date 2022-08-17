@@ -3,13 +3,14 @@ import { ProductListItem } from "../../components/Product";
 import {InferGetStaticPropsType} from "next";
 import {apolloClient} from "../../graphql/apolloClient";
 import { gql } from "@apollo/client";
+import {GetProductsListDocument, GetProductsListQuery} from "../../generated/graphql";
 // import {Pagination} from "../../components/Pagination";
 
 // SSG
 interface StoreApiResponse {
     category: string;
     description: string;
-    id: number;
+    id: string;
     image: string;
     price: number;
     // rating: {
@@ -30,7 +31,7 @@ const ProductPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) =
                             <ProductListItem key={product.slug} data={{
                                 id: product.slug,
                                 price: product.price,
-                                rating: product.rating,
+                                rating: 5,
                                 thumbnailUrl: product.images[0].url,
                                 thumbnailAlt: product.name,
                                 title: product.name
@@ -50,20 +51,8 @@ export default ProductPage;
 export const getStaticProps = async () => {
     // const res = await fetch('https://naszsklep-api.vercel.app/api/products');
     // const data: StoreApiResponse[] = await res.json();
-    const { data,  } = await apolloClient.query<GetProductsListResponse>({
-        query: gql`
-            query GetProductsList {
-                products {
-                    slug
-                    name
-                    price
-                    rating
-                    images(first: 1){
-                        url
-                    }
-                }
-            }
-        `
+    const { data,  } = await apolloClient.query<GetProductsListQuery>({
+        query: GetProductsListDocument
     })
 
     return {
@@ -72,19 +61,3 @@ export const getStaticProps = async () => {
         }
     }
 };
-
-export interface GetProductsListResponse {
-    products: Product[];
-}
-
-export interface Product {
-    slug: string;
-    name: string;
-    price: number;
-    rating: number
-    images: Image[];
-}
-
-export interface Image {
-    url: string;
-}

@@ -8,7 +8,7 @@ import {useCartState} from "./Cart/CartContext";
 
 interface ProductDetails {
     description: string;
-    id: number;
+    id: string;
     longDescription: MDXRemoteSerializeResult<Record<string, unknown>>;
     price: number;
     rating: number;
