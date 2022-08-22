@@ -7,8 +7,8 @@ const nextSeoConfig = {
   openGraph: {
     title,
     description,
-    site_name: "Super sklep"
-  }
-}
+    site_name: "Super sklep",
+  },
+};
 
 export default nextSeoConfig;
