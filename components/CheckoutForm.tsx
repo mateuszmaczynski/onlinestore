@@ -1,15 +1,38 @@
-import {FormEventHandler} from "react";
+import { useForm } from "react-hook-form";
+import { validateCreditCartDate } from "../utils";
+
+interface CheckoutFormData {
+  address: string;
+  cardNumber: string;
+  city: string;
+  country: string;
+  cvc: string;
+  email: string;
+  expirationDate: string;
+  lastName: string;
+  name: string;
+  owner: string;
+  phone: string;
+  postalCode: string;
+  region: string;
+  sameAsShipping: boolean;
+};
 
 const CheckoutForm = () => {
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-    debugger;
-    e.preventDefault();
-    console.log(e);
-  }
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    formState
+  } = useForm<CheckoutFormData>();
+
+  const onSubmit = handleSubmit(data => console.log(data))
+
+  console.log('formState =',formState);
   return (
     <div className="flex flex-col md:w-full">
       <div className="mt-10 sm:mt-0">
-        <form onSubmit={(e) => handleSubmit(e)}>
+        <form onSubmit={(e) => onSubmit(e)}>
           <div className="md:grid md:grid-cols-4 md:gap-6 divide-x">
             <div className="md:col-span-2">
                 <div className="px-4 py-5 bg-white sm:p-6">
@@ -23,11 +46,15 @@ const CheckoutForm = () => {
                       </label>
                       <input
                         type="text"
-                        name="name"
                         id="name"
-                        autoComplete="name"
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        {...register("name", {required: 'This field is required'})}
                       />
+                      {formState.errors?.name && (
+                        <span role="alert" className="text-sm font-bold text-red-500">
+                          {formState.errors.name?.message}
+                        </span>
+                      )}
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
@@ -39,10 +66,9 @@ const CheckoutForm = () => {
                       </label>
                       <input
                         type="text"
-                        name="lastName"
                         id="lastName"
-                        autoComplete="lastName"
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        {...register("lastName", {required: true})}
                       />
                     </div>
 
@@ -55,13 +81,11 @@ const CheckoutForm = () => {
                       </label>
                       <input
                         type="text"
-                        name="email"
                         id="email"
-                        autoComplete="email"
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        {...register("email", {required: true})}
                       />
                     </div>
-
                     <div className="col-span-6 sm:col-span-3">
                       <label
                         htmlFor="phone"
@@ -71,25 +95,24 @@ const CheckoutForm = () => {
                       </label>
                       <input
                         type="text"
-                        name="phone"
                         id="phone"
-                        autoComplete="phone"
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        {...register("phone", {required: true})}
                       />
                     </div>
-                    <div className="col-span-6 sm:col-span-3 lg:col-span-1">
+
+                    <div className="col-span-6 sm:col-span-3 lg:col-span-2">
                       <label
-                        htmlFor="code"
+                        htmlFor="postalCode"
                         className="block text-sm font-medium text-gray-700"
                       >
-                        Zip Code
+                        Postal Code
                       </label>
                       <input
                         type="text"
-                        name="code"
-                        id="code"
-                        autoComplete="code"
+                        id="postalCode"
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        {...register("postalCode", {required: true})}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3 lg:col-span-2">
@@ -101,12 +124,28 @@ const CheckoutForm = () => {
                       </label>
                       <input
                         type="text"
-                        name="region"
                         id="region"
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        {...register("region")}
                       />
                     </div>
-                    <div className="col-span-6 sm:col-span-6 lg:col-span-3">
+
+                    <div className="col-span-6 sm:col-span-6 lg:col-span-2">
+                      <label
+                        htmlFor="address"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Address
+                      </label>
+                      <input
+                        type="text"
+                        id="address"
+                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        {...register("address", {required: true})}
+                      />
+                    </div>
+
+                    <div className="col-span-6 sm:col-span-3">
                       <label
                         htmlFor="city"
                         className="block text-sm font-medium text-gray-700"
@@ -115,10 +154,9 @@ const CheckoutForm = () => {
                       </label>
                       <input
                         type="text"
-                        name="city"
                         id="city"
-                        autoComplete="city"
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        {...register("city", {required: true})}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -130,13 +168,95 @@ const CheckoutForm = () => {
                       </label>
                       <input
                         type="text"
-                        name="country"
                         id="country"
-                        autoComplete="country"
+                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                        {...register("country", {required: true})}
+                      />
+                    </div>
+
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="owner"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Owner
+                      </label>
+                      <input
+                        type="text"
+                        {...register("owner")}
+                        id="owner"
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
                     </div>
-                    <div className="col-span-6 sm:col-span-3"></div>
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="cvc"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        CVV/CVC
+                      </label>
+                      <input
+                        type="text"
+                        {...register("cvc")}
+                        id="cvc"
+                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      />
+                    </div>
+
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="cardNumber"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Card Number
+                      </label>
+                      <input
+                        type="text"
+                        {...register("cardNumber")}
+                        id="cardNumber"
+                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      />
+                    </div>
+                    <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="expirationDate"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Expiration Date (MM/YY)
+                      </label>
+                      <input
+                        type="text"
+                        {...register("expirationDate", {
+                          required: true,
+                          // pattern: /^\d\d\/\d\d$/
+                          validate:  validateCreditCartDate
+                        })}
+                        id="expirationDate"
+                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      />
+                    </div>
+                    <section aria-labelledby="billing-heading" className="mt-10 col-span-6">
+                      <h2 id="billing-heading" className="text-lg font-medium text-gray-700">
+                        Billing information
+                      </h2>
+                      <div className="mt-2 flex items-center">
+                        <input
+                          id="same-as-shipping"
+                          {...register("sameAsShipping")}
+                          type="checkbox"
+                          defaultChecked
+                          className="h-4 w-4 border-gray-300 rounded focus:ring-1"
+                        />
+                        <div className="ml-2">
+                          <label htmlFor="same-as-shipping" className="block text-sm font-medium text-gray-700">
+                            Same as shipping information
+                          </label>
+                        </div>
+                      </div>
+                      <div className="text-sm text-gray-700 mt-4">
+                        You won't be charged until the next step.
+                      </div>
+                    </section>
                   </div>
                 </div>
             </div>
