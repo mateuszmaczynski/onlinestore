@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { validateCreditCartDate } from "../utils";
+import FormInput from "./FormInput";
 
 interface CheckoutFormData {
   address: string;
@@ -38,201 +39,126 @@ const CheckoutForm = () => {
                 <div className="px-4 py-5 bg-white sm:p-6">
                   <div className="grid grid-cols-6 gap-6">
                     <div className="col-span-6 sm:col-span-3">
-                      <label
-                        htmlFor="name"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        First name
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                        {...register("name", {required: 'This field is required'})}
+                       <FormInput
+                        fieldName={"name"}
+                        label={"First name"}
+                        register={register}
+                        formState={formState}
+                        isRequired={true}
                       />
-                      {formState.errors?.name && (
-                        <span role="alert" className="text-sm font-bold text-red-500">
-                          {formState.errors.name?.message}
-                        </span>
-                      )}
                     </div>
-
                     <div className="col-span-6 sm:col-span-3">
-                      <label
-                        htmlFor="lastName"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Last name
-                      </label>
-                      <input
-                        type="text"
-                        id="lastName"
-                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                        {...register("lastName", {required: true})}
+                      <FormInput
+                        fieldName={"lastName"}
+                        label={"Last name"}
+                        register={register}
+                        formState={formState}
+                        isRequired={true}
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
-                      <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Email address
-                      </label>
-                      <input
-                        type="text"
-                        id="email"
-                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                        {...register("email", {required: true})}
+                      <FormInput
+                        fieldName={"email"}
+                        label={"Email address"}
+                        register={register}
+                        formState={formState}
+                        isRequired={true}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
-                      <label
-                        htmlFor="phone"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Phone number
-                      </label>
-                      <input
-                        type="text"
-                        id="phone"
-                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                        {...register("phone", {required: true})}
+                      <FormInput
+                        fieldName={"phone"}
+                        label={"phone"}
+                        register={register}
+                        formState={formState}
+                        isRequired={true}
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                      <label
-                        htmlFor="postalCode"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Postal Code
-                      </label>
-                      <input
-                        type="text"
-                        id="postalCode"
-                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                        {...register("postalCode", {required: true})}
+                      <FormInput
+                        fieldName={"postalCode"}
+                        label={"Postal Code"}
+                        register={register}
+                        formState={formState}
+                        isRequired={true}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                      <label
-                        htmlFor="region"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        State / Province
-                      </label>
-                      <input
-                        type="text"
-                        id="region"
-                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                        {...register("region")}
+                      <FormInput
+                        fieldName={"region"}
+                        label={"State / Province"}
+                        register={register}
+                        formState={formState}
+                        isRequired={true}
                       />
                     </div>
-
-                    <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                      <label
-                        htmlFor="address"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Address
-                      </label>
-                      <input
-                        type="text"
-                        id="address"
-                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                        {...register("address", {required: true})}
+                    <div className="col-span-6 sm:col-span-3 lg:col-span-2">
+                      <FormInput
+                        fieldName={"address"}
+                        label={"Address"}
+                        register={register}
+                        formState={formState}
+                        isRequired={true}
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
-                      <label
-                        htmlFor="city"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        City
-                      </label>
-                      <input
-                        type="text"
-                        id="city"
-                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                        {...register("city", {required: true})}
+                      <FormInput
+                        fieldName={"city"}
+                        label={"City"}
+                        register={register}
+                        formState={formState}
+                        isRequired={true}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
-                      <label
-                        htmlFor="country"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Country
-                      </label>
-                      <input
-                        type="text"
-                        id="country"
-                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                        {...register("country", {required: true})}
+                      <FormInput
+                        fieldName={"country"}
+                        label={"Country"}
+                        register={register}
+                        formState={formState}
+                        isRequired={true}
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
-                      <label
-                        htmlFor="owner"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Owner
-                      </label>
-                      <input
-                        type="text"
-                        {...register("owner")}
-                        id="owner"
-                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      <FormInput
+                        fieldName={"owner"}
+                        label={"Owner"}
+                        register={register}
+                        formState={formState}
+                        isRequired={false}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
-                      <label
-                        htmlFor="cvc"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        CVV/CVC
-                      </label>
-                      <input
-                        type="text"
-                        {...register("cvc")}
-                        id="cvc"
-                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      <FormInput
+                        fieldName={"cvc"}
+                        label={"CVV/CVC"}
+                        register={register}
+                        formState={formState}
+                        isRequired={true}
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
-                      <label
-                        htmlFor="cardNumber"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Card Number
-                      </label>
-                      <input
-                        type="text"
-                        {...register("cardNumber")}
-                        id="cardNumber"
-                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      <FormInput
+                        fieldName={"cardNumber"}
+                        label={"Card Number"}
+                        register={register}
+                        formState={formState}
+                        isRequired={true}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
-                      <label
-                        htmlFor="expirationDate"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Expiration Date (MM/YY)
-                      </label>
-                      <input
-                        type="text"
-                        {...register("expirationDate", {
-                          required: true,
-                          // pattern: /^\d\d\/\d\d$/
-                          validate:  validateCreditCartDate
-                        })}
-                        id="expirationDate"
-                        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                      <FormInput
+                        fieldName={"expirationDate"}
+                        label={"Expiration Date (MM/YY)"}
+                        register={register}
+                        formState={formState}
+                        isRequired={true}
+                        validateFunction={validateCreditCartDate}
                       />
                     </div>
                     <section aria-labelledby="billing-heading" className="mt-10 col-span-6">
