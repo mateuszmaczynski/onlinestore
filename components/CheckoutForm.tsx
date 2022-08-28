@@ -1,23 +1,27 @@
 import { useForm } from "react-hook-form";
 import { validateCreditCartDate } from "../utils";
 import FormInput from "./FormInput";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
 
-interface CheckoutFormData {
-  address: string;
-  cardNumber: string;
-  city: string;
-  country: string;
-  cvc: string;
-  email: string;
-  expirationDate: string;
-  lastName: string;
-  name: string;
-  owner: string;
-  phone: string;
-  postalCode: string;
-  region: string;
-  sameAsShipping: boolean;
-};
+const CheckoutFormSchema = yup.object().shape({
+  address: yup.string().required().trim(),
+  cardNumber: yup.string().required().length(26),
+  city: yup.string().required().trim(),
+  country: yup.string().required().trim(),
+  cvc: yup.string().matches(/^d{3}/, "number CVV must have 3 digits length").required().trim(),
+  email: yup.string().email().required().trim(),
+  expirationDate: yup.string().required().trim(),
+  lastName: yup.string().min(2).required().trim(),
+  name: yup.string().min(2).required().trim(),
+  owner: yup.string().min(5).required().trim(),
+  phone: yup.string().required().trim(),
+  postalCode: yup.string().required().trim(),
+  region: yup.string().required().trim(),
+  acceptTerms: yup.boolean()
+}).required();
+
+type CheckoutFormData = yup.InferType<typeof CheckoutFormSchema>
 
 const CheckoutForm = () => {
   const {
@@ -25,7 +29,7 @@ const CheckoutForm = () => {
     setValue,
     handleSubmit,
     formState
-  } = useForm<CheckoutFormData>();
+  } = useForm<CheckoutFormData>({  resolver: yupResolver(CheckoutFormSchema)});
 
   const onSubmit = handleSubmit(data => console.log(data))
 
@@ -162,20 +166,17 @@ const CheckoutForm = () => {
                       />
                     </div>
                     <section aria-labelledby="billing-heading" className="mt-10 col-span-6">
-                      <h2 id="billing-heading" className="text-lg font-medium text-gray-700">
-                        Billing information
-                      </h2>
                       <div className="mt-2 flex items-center">
                         <input
-                          id="same-as-shipping"
-                          {...register("sameAsShipping")}
+                          id="acceptTerms"
+                          {...register("acceptTerms")}
                           type="checkbox"
                           defaultChecked
                           className="h-4 w-4 border-gray-300 rounded focus:ring-1"
                         />
                         <div className="ml-2">
-                          <label htmlFor="same-as-shipping" className="block text-sm font-medium text-gray-700">
-                            Same as shipping information
+                          <label htmlFor="acceptTerms" className="block text-sm font-medium text-gray-700">
+                            Accept Terms & Conditions
                           </label>
                         </div>
                       </div>
