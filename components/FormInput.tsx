@@ -1,27 +1,52 @@
 interface FormInputProps {
   fieldName: string;
+  formState: any;
   label: string;
   register: any;
-  formState: any;
-  isRequired: boolean;
-  validateFunction?: any;
+  className?: string;
+  type?: string;
 };
 
-export const FormInput = ({fieldName, label, register, formState, isRequired, validateFunction}: FormInputProps) => {
+const styles = "mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md";
+
+export const FormInput = ({fieldName, label, register, formState, type = "text", className = styles}: FormInputProps) => {
   return (
     <>
-      <label
-        htmlFor={fieldName}
-        className="block text-sm font-medium text-gray-700"
-      >
-        {label}
-      </label>
-      <input
-        type="text"
-        id={fieldName}
-        className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-        {...register(fieldName, {required: isRequired === true ? 'This field is required' : '', validate: validateFunction})}
-      />
+      {type === "text" && (
+        <>
+        <label
+          htmlFor={fieldName}
+          className="block text-sm font-medium text-gray-700"
+        >
+          {label}
+        </label>
+          <input
+            type={type}
+            id={fieldName}
+            className={className}
+            {...register(fieldName)}
+          />
+        </>
+      )}
+
+      {type === "checkbox" && (
+        <div className="mt-2 flex items-center">
+          <input
+            type={type}
+            id={fieldName}
+            className={className}
+            {...register(fieldName)}
+          />
+          <div className="ml-2">
+            <label
+              htmlFor={fieldName}
+              className="block text-sm font-medium text-gray-700"
+            >
+              {label}
+            </label>
+          </div>
+        </div>
+      )}
       {formState.errors[fieldName] && (
         <span role="alert" className="text-sm font-bold text-red-500">
           {formState.errors[fieldName]?.message}
