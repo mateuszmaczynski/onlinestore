@@ -1,15 +1,26 @@
 import { useForm } from "react-hook-form";
-import { validateCreditCartDate } from "../utils";
 import FormInput from "./FormInput";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
+
+yup.setLocale({
+  mixed: {
+    required: "to pole jest wymagane",
+    oneOf: "to pole wymaga wartości: ${values}",
+  },
+  string: {
+    email: "email jest wymagany w odpowiednim formacie ",
+    min: "minimalna liczna znaków ${min}",
+    length: "to pole wymaga ${length} znaków",
+  },
+});
 
 const CheckoutFormSchema = yup.object().shape({
   address: yup.string().required().trim(),
   cardNumber: yup.string().required().length(26),
   city: yup.string().required().trim(),
   country: yup.string().required().trim(),
-  cvc: yup.string().matches(/^d{3}/, "number CVV must have 3 digits length").required().trim(),
+  cvc: yup.string().matches(/^d{3}/, "numer CVC musi zawierać 3 cyfry").required().trim(),
   email: yup.string().email().required().trim(),
   expirationDate: yup.string().required().trim(),
   lastName: yup.string().min(2).required().trim(),
@@ -18,7 +29,7 @@ const CheckoutFormSchema = yup.object().shape({
   phone: yup.string().required().trim(),
   postalCode: yup.string().required().trim(),
   region: yup.string().required().trim(),
-  acceptTerms: yup.boolean()
+  acceptTerms: yup.string().oneOf(["true"],"potwierdzenie warunków jest obowiązkowe"),
 }).required();
 
 type CheckoutFormData = yup.InferType<typeof CheckoutFormSchema>
@@ -33,7 +44,6 @@ const CheckoutForm = () => {
 
   const onSubmit = handleSubmit(data => console.log(data))
 
-  console.log('formState =',formState);
   return (
     <div className="flex flex-col md:w-full">
       <div className="mt-10 sm:mt-0">
@@ -48,7 +58,6 @@ const CheckoutForm = () => {
                         label={"First name"}
                         register={register}
                         formState={formState}
-                        isRequired={true}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -57,7 +66,6 @@ const CheckoutForm = () => {
                         label={"Last name"}
                         register={register}
                         formState={formState}
-                        isRequired={true}
                       />
                     </div>
 
@@ -67,7 +75,6 @@ const CheckoutForm = () => {
                         label={"Email address"}
                         register={register}
                         formState={formState}
-                        isRequired={true}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -76,7 +83,6 @@ const CheckoutForm = () => {
                         label={"phone"}
                         register={register}
                         formState={formState}
-                        isRequired={true}
                       />
                     </div>
 
@@ -86,7 +92,6 @@ const CheckoutForm = () => {
                         label={"Postal Code"}
                         register={register}
                         formState={formState}
-                        isRequired={true}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3 lg:col-span-2">
@@ -95,7 +100,6 @@ const CheckoutForm = () => {
                         label={"State / Province"}
                         register={register}
                         formState={formState}
-                        isRequired={true}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3 lg:col-span-2">
@@ -104,7 +108,6 @@ const CheckoutForm = () => {
                         label={"Address"}
                         register={register}
                         formState={formState}
-                        isRequired={true}
                       />
                     </div>
 
@@ -114,7 +117,6 @@ const CheckoutForm = () => {
                         label={"City"}
                         register={register}
                         formState={formState}
-                        isRequired={true}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -123,7 +125,6 @@ const CheckoutForm = () => {
                         label={"Country"}
                         register={register}
                         formState={formState}
-                        isRequired={true}
                       />
                     </div>
 
@@ -133,7 +134,6 @@ const CheckoutForm = () => {
                         label={"Owner"}
                         register={register}
                         formState={formState}
-                        isRequired={false}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -142,7 +142,6 @@ const CheckoutForm = () => {
                         label={"CVV/CVC"}
                         register={register}
                         formState={formState}
-                        isRequired={true}
                       />
                     </div>
 
@@ -152,7 +151,6 @@ const CheckoutForm = () => {
                         label={"Card Number"}
                         register={register}
                         formState={formState}
-                        isRequired={true}
                       />
                     </div>
                     <div className="col-span-6 sm:col-span-3">
@@ -161,29 +159,21 @@ const CheckoutForm = () => {
                         label={"Expiration Date (MM/YY)"}
                         register={register}
                         formState={formState}
-                        isRequired={true}
-                        validateFunction={validateCreditCartDate}
                       />
                     </div>
-                    <section aria-labelledby="billing-heading" className="mt-10 col-span-6">
-                      <div className="mt-2 flex items-center">
-                        <input
-                          id="acceptTerms"
-                          {...register("acceptTerms")}
-                          type="checkbox"
-                          defaultChecked
-                          className="h-4 w-4 border-gray-300 rounded focus:ring-1"
-                        />
-                        <div className="ml-2">
-                          <label htmlFor="acceptTerms" className="block text-sm font-medium text-gray-700">
-                            Accept Terms & Conditions
-                          </label>
-                        </div>
-                      </div>
+                    <div className="mt-10 col-span-6">
+                      <FormInput
+                        fieldName={"acceptTerms"}
+                        label={"Accept Terms & Conditions"}
+                        register={register}
+                        formState={formState}
+                        type="checkbox"
+                        className="h-4 w-4 border-gray-300 rounded focus:ring-1"
+                      />
                       <div className="text-sm text-gray-700 mt-4">
                         You won't be charged until the next step.
                       </div>
-                    </section>
+                    </div>
                   </div>
                 </div>
             </div>
