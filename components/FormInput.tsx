@@ -12,7 +12,7 @@ const styles = "mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full 
 export const FormInput = ({fieldName, label, register, formState, type = "text", className = styles}: FormInputProps) => {
   return (
     <>
-      {type === "text" && (
+      {(type === "text" || type === "number") && (
         <>
         <label
           htmlFor={fieldName}
