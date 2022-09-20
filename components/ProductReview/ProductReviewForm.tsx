@@ -2,16 +2,23 @@ import {useForm} from "react-hook-form";
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import FormInput from "./../FormInput";
+import {GetReviewForProductSlugDocument, useCreateProductReviewMutation} from "../../generated/graphql";
 
 const ReviewFormSchema = yup.object().shape({
+  email: yup.string().email().required().trim(),
   content: yup.string().min(2).required().trim(),
+  headline: yup.string().min(2).required().trim(),
   name: yup.string().min(3).required().trim(),
   rating: yup.number().min(1).max(5).required()
 }).required();
 
 type ReviewFormData = yup.InferType<typeof ReviewFormSchema>
 
-export const ProductReviewForm = () => {
+interface ProductReviewFormProps {
+  productSlug: string;
+}
+
+export const ProductReviewForm = ({productSlug}: ProductReviewFormProps) => {
   const {
     register,
     setValue,
@@ -19,14 +26,46 @@ export const ProductReviewForm = () => {
     formState
   } = useForm<ReviewFormData>({resolver: yupResolver(ReviewFormSchema)});
 
-  const onSubmit = handleSubmit( () => console.log('a'))
+  const [createReview, { data, loading, error }] = useCreateProductReviewMutation({
+    refetchQueries: [
+      {
+        query: GetReviewForProductSlugDocument,
+        variables: { slug: productSlug },
+      },
+    ]
+  });
+
+  const onSubmit = handleSubmit( (data) => {
+    createReview({
+      variables: {
+        review: {
+          ...data,
+          product: {
+            connect: {
+              slug: productSlug
+            }
+          }
+        }
+      }
+    })
+  })
+
+
 
   return (
     <div className="flex flex-col md:w-full">
       <div className="mt-10 sm:mt-0">
         <form onSubmit={(e) => onSubmit(e)}>
           <div className="grid grid-cols-6 gap-6">
-            <div className="col-span-6">
+            <div className="col-span-1  sm:col-span-2">
+              <FormInput
+                fieldName={"headline"}
+                label={"Headline"}
+                register={register}
+                formState={formState}
+              />
+            </div>
+            <div className="col-span-6 sm:col-span-4">
               <FormInput
                 fieldName={"content"}
                 label={"Content"}
@@ -34,10 +73,18 @@ export const ProductReviewForm = () => {
                 formState={formState}
               />
             </div>
-            <div className="col-span-6 sm:col-span-4">
+            <div className="col-span-6 sm:col-span-2">
               <FormInput
                 fieldName={"name"}
                 label={"Name"}
+                register={register}
+                formState={formState}
+              />
+            </div>
+            <div className="col-span-6 sm:col-span-2">
+              <FormInput
+                fieldName={"email"}
+                label={"Email address"}
                 register={register}
                 formState={formState}
               />
