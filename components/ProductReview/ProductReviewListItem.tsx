@@ -5,7 +5,9 @@ interface ProductReviewItemProps {
   review: ReviewContentFragment
 }
 
-export const ProductReviewItem = ({review}: ProductReviewItemProps) => {
+
+
+export const ProductReviewListItem = ({review}: ProductReviewItemProps) => {
   return (
       <li className={`border mt-4 bg-white p-4`}>
         {/* <h3 className="font-bold">nagłówek: {review.headline}</h3> */}

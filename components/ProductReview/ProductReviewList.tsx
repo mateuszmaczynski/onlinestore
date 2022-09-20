@@ -1,5 +1,5 @@
 import {useGetReviewForProductSlugQuery} from "../../generated/graphql";
-import {ProductReviewItem} from "./ProductReviewItem";
+import {ProductReviewListItem} from "./ProductReviewListItem";
 
 interface ProductReviewListProps {
   productSlug: string;
@@ -20,7 +20,7 @@ export const ProductReviewList = ({productSlug}: ProductReviewListProps) => {
   return (
     <div>
       {data.product.reviews.map((review) => (
-        <ProductReviewItem key={review.name} review={review} />
+        <ProductReviewListItem key={review.name} review={review} />
       ))}
     </div>
   )
