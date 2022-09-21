@@ -5,10 +5,12 @@ import { NextSeo } from "next-seo";
 // import {HandlingUrlReactMarkdown} from "../components/HandlingUrlReactMarkdown";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { useCartState } from "./Cart/CartContext";
+import {ProductReviewContainer} from "./ProductReview/ProductReviewContainer";
 
 interface ProductDetails {
   description: string;
   id: string;
+  slug: string;
   longDescription: MDXRemoteSerializeResult<Record<string, unknown>>;
   price: number;
   rating: number;
@@ -87,6 +89,7 @@ export const ProductListItem = ({
 export const ProductDetails = ({
   data: {
     id,
+    slug,
     description,
     longDescription,
     price,
@@ -135,7 +138,8 @@ export const ProductDetails = ({
         {/*//executed on client*/}
         {/*<HandlingUrlReactMarkdown id={id}>{longDescription}</HandlingUrlReactMarkdown>*/}
       </article>
-      <Rating rating={rating} />
+      Opinie klientów:<Rating rating={rating} />
+      <ProductReviewContainer productSlug={slug} />
     </div>
   );
 };
