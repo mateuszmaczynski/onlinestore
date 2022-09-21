@@ -54,6 +54,7 @@ const ProductIdPage = ({
               data={{
                 description: data.description,
                 id: data.slug,
+                slug: data.slug,
                 longDescription: data.longDescription,
                 price: data.price,
                 rating: 5,

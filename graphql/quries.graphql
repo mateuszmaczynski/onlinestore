@@ -1,3 +1,9 @@
+query GetProductsSlugs {
+  products {
+    slug
+  }
+}
+
 query GetProductDetailsBySlug($slug: String) {
   product(where: { slug: $slug }) {
     name
@@ -6,12 +12,6 @@ query GetProductDetailsBySlug($slug: String) {
     images {
       url
     }
-    slug
-  }
-}
-
-query GetProductsSlugs {
-  products {
     slug
   }
 }
@@ -33,6 +33,37 @@ fragment reviewContent on Review {
   headline
   name
   rating
+}
+
+query GetAllProductsReviews {
+  products {
+    reviews {
+      ...reviewContent
+    }
+    name
+  }
+}
+
+query GetAllReviewsWithProduct {
+  reviews {
+    ...reviewContent
+    product {
+      name
+      slug
+    }
+  }
+}
+
+query GetProductBySlug($slug: String!) {
+  product(where: { slug: $slug }) {
+    id
+    slug
+    price
+    name
+    images {
+      url
+    }
+  }
 }
 
 query GetReviewForProductSlug($slug: String) {
