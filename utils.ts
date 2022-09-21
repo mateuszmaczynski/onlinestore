@@ -1,3 +1,5 @@
+import {useMutation} from "react-query";
+
 export const validateCreditCartDate = (value: string) => {
     if (value.length !== 5){
       return 'Wprowadzono złą długość danych, wprowadź dane w formacie MM/YY';
@@ -13,3 +15,14 @@ export const validateCreditCartDate = (value: string) => {
     }
     return true;
 }
+
+
+export const useAddToNewsletterMutation = () =>
+  useMutation('add-to-newsletter', async ({email}: { email: string }) => {
+    await fetch('http://localhost:3000/api/addSubsciber', {
+      method: 'POST',
+      headers: {"Contect-Type": "application/json"},
+      body: JSON.stringify({email}),
+    });
+  });
+
