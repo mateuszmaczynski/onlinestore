@@ -8,16 +8,17 @@ interface ProductReviewItemProps {
 
 
 export const ProductReviewListItem = ({review}: ProductReviewItemProps) => {
+  const isOptimistic = review.id.startsWith("-"); // temporary id
+
   return (
-      <li className={`border mt-4 bg-white p-4`}>
-        {/* <h3 className="font-bold">nagłówek: {review.headline}</h3> */}
+    <li className={`border mt-4 bg-white p-2   ${isOptimistic ? "opacity-50" : ""}`}>
         <p>Klient: {review.name}</p>
         <p>Treść komentarza: {review.content}</p>
-        <p>
+        <div>
           {review.rating && (
              <Rating rating={review.rating}></Rating>
           )}
-        </p>
+        </div>
       </li>
   )
 }

@@ -2,7 +2,7 @@ import {useForm} from "react-hook-form";
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import FormInput from "./../FormInput";
-import {GetReviewForProductSlugDocument, useCreateProductReviewMutation} from "../../generated/graphql";
+import {GetReviewForProductSlugDocument, useCreateProductReviewMutation, GetReviewForProductSlugQuery} from "../../generated/graphql";
 
 const ReviewFormSchema = yup.object().shape({
   email: yup.string().email().required().trim(),
@@ -27,13 +27,46 @@ export const ProductReviewForm = ({productSlug}: ProductReviewFormProps) => {
   } = useForm<ReviewFormData>({resolver: yupResolver(ReviewFormSchema)});
 
   const [createReview, { data, loading, error }] = useCreateProductReviewMutation({
-    refetchQueries: [
-      {
+    update(cache, result){
+
+      const originalReviewsQuery = cache.readQuery<GetReviewForProductSlugQuery>({
         query: GetReviewForProductSlugDocument,
         variables: { slug: productSlug },
-      },
-    ]
+      });
+
+      if (!originalReviewsQuery?.product?.reviews || !result.data?.review) {
+        // ...
+        return;
+      }
+
+      const newReviewsQuery = {
+        ...originalReviewsQuery,
+        product: {
+          ...originalReviewsQuery.product,
+          reviews: [
+            ...originalReviewsQuery.product.reviews,
+            result.data.review
+          ]
+        }
+      }
+
+      cache.writeQuery({
+        query: GetReviewForProductSlugDocument,
+        variables: { slug: productSlug },
+        data: newReviewsQuery
+      })
+    }
   });
+
+  // REFETCH
+  // const [createReview, { data, loading, error }] = useCreateProductReviewMutation({
+  //   refetchQueries: [
+  //     {
+  //       query: GetReviewForProductSlugDocument,
+  //       variables: { slug: productSlug },
+  //     },
+  //   ]
+  // });
 
   const onSubmit = handleSubmit( (data) => {
     createReview({
@@ -46,11 +79,17 @@ export const ProductReviewForm = ({productSlug}: ProductReviewFormProps) => {
             }
           }
         }
-      }
+      },
+      optimisticResponse: {
+        __typename: "Mutation",
+        review: {
+          __typename: "Review",
+          id: (-Math.random()).toString(32), //temporary id
+          ...data,
+        },
+      },
     })
   })
-
-
 
   return (
     <div className="flex flex-col md:w-full">

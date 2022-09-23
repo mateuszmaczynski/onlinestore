@@ -28,7 +28,8 @@ query GetProductsList {
   }
 }
 
-fragment reviewContent on Review {
+fragment ReviewContent on Review {
+  id
   content
   headline
   name
@@ -38,7 +39,7 @@ fragment reviewContent on Review {
 query GetAllProductsReviews {
   products {
     reviews {
-      ...reviewContent
+      ...ReviewContent
     }
     name
   }
@@ -46,7 +47,7 @@ query GetAllProductsReviews {
 
 query GetAllReviewsWithProduct {
   reviews {
-    ...reviewContent
+    ...ReviewContent
     product {
       name
       slug
@@ -69,7 +70,7 @@ query GetProductBySlug($slug: String!) {
 query GetReviewForProductSlug($slug: String) {
   product(where: {slug: $slug}){
     reviews {
-      ...reviewContent
+      ...ReviewContent
     }
   }
 }

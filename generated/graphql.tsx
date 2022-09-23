@@ -10715,7 +10715,7 @@ export type CreateProductReviewMutationVariables = Exact<{
 }>;
 
 
-export type CreateProductReviewMutation = { __typename?: 'Mutation', review?: { __typename?: 'Review', id: string, stage: Stage } | null };
+export type CreateProductReviewMutation = { __typename?: 'Mutation', review?: { __typename?: 'Review', id: string, content: string, headline: string, name: string, rating?: number | null } | null };
 
 export type GetProductsSlugsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -10734,17 +10734,17 @@ export type GetProductsListQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetProductsListQuery = { __typename?: 'Query', products: Array<{ __typename?: 'Product', slug: string, name: string, price: number, rating?: number | null, images: Array<{ __typename?: 'Asset', url: string }> }> };
 
-export type ReviewContentFragment = { __typename?: 'Review', content: string, headline: string, name: string, rating?: number | null };
+export type ReviewContentFragment = { __typename?: 'Review', id: string, content: string, headline: string, name: string, rating?: number | null };
 
 export type GetAllProductsReviewsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllProductsReviewsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'Product', name: string, reviews: Array<{ __typename?: 'Review', content: string, headline: string, name: string, rating?: number | null }> }> };
+export type GetAllProductsReviewsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'Product', name: string, reviews: Array<{ __typename?: 'Review', id: string, content: string, headline: string, name: string, rating?: number | null }> }> };
 
 export type GetAllReviewsWithProductQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllReviewsWithProductQuery = { __typename?: 'Query', reviews: Array<{ __typename?: 'Review', content: string, headline: string, name: string, rating?: number | null, product?: { __typename?: 'Product', name: string, slug: string } | null }> };
+export type GetAllReviewsWithProductQuery = { __typename?: 'Query', reviews: Array<{ __typename?: 'Review', id: string, content: string, headline: string, name: string, rating?: number | null, product?: { __typename?: 'Product', name: string, slug: string } | null }> };
 
 export type GetProductBySlugQueryVariables = Exact<{
   slug: Scalars['String'];
@@ -10758,10 +10758,11 @@ export type GetReviewForProductSlugQueryVariables = Exact<{
 }>;
 
 
-export type GetReviewForProductSlugQuery = { __typename?: 'Query', product?: { __typename?: 'Product', reviews: Array<{ __typename?: 'Review', content: string, headline: string, name: string, rating?: number | null }> } | null };
+export type GetReviewForProductSlugQuery = { __typename?: 'Query', product?: { __typename?: 'Product', reviews: Array<{ __typename?: 'Review', id: string, content: string, headline: string, name: string, rating?: number | null }> } | null };
 
 export const ReviewContentFragmentDoc = gql`
-    fragment reviewContent on Review {
+    fragment ReviewContent on Review {
+  id
   content
   headline
   name
@@ -10771,11 +10772,10 @@ export const ReviewContentFragmentDoc = gql`
 export const CreateProductReviewDocument = gql`
     mutation CreateProductReview($review: ReviewCreateInput!) {
   review: createReview(data: $review) {
-    id
-    stage
+    ...ReviewContent
   }
 }
-    `;
+    ${ReviewContentFragmentDoc}`;
 export type CreateProductReviewMutationFn = Apollo.MutationFunction<CreateProductReviewMutation, CreateProductReviewMutationVariables>;
 
 /**
@@ -10921,7 +10921,7 @@ export const GetAllProductsReviewsDocument = gql`
     query GetAllProductsReviews {
   products {
     reviews {
-      ...reviewContent
+      ...ReviewContent
     }
     name
   }
@@ -10957,7 +10957,7 @@ export type GetAllProductsReviewsQueryResult = Apollo.QueryResult<GetAllProducts
 export const GetAllReviewsWithProductDocument = gql`
     query GetAllReviewsWithProduct {
   reviews {
-    ...reviewContent
+    ...ReviewContent
     product {
       name
       slug
@@ -11037,7 +11037,7 @@ export const GetReviewForProductSlugDocument = gql`
     query GetReviewForProductSlug($slug: String) {
   product(where: {slug: $slug}) {
     reviews {
-      ...reviewContent
+      ...ReviewContent
     }
   }
 }
