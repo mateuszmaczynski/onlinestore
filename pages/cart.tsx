@@ -1,8 +1,53 @@
 import { useCartState } from "../components/Cart/CartContext";
 import { Main } from "../components/Main";
+import { loadStripe } from "@stripe/stripe-js";
+import Stripe from "stripe";
+
+const stripeSecret = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 
 const CartContent = () => {
   const cartItems = useCartState();
+
+  if (!stripeSecret) {
+    return <div></div>;
+  }
+
+  const stripePromise = loadStripe(
+    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+  );
+
+  const pay = async () => {
+    const stripe = await stripePromise;
+
+    if(!stripe){
+      throw new Error(`Something went wrong`);
+    }
+
+    const res = await fetch("/api/checkout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(
+        cartItems.items.map((cartItem) => {
+          return {
+            price_data: {
+              currency: "PLN",
+              unit_amount: cartItem.price*100,
+              product_data: {
+                name: cartItem.title
+              },
+
+            },
+            quantity: cartItem.count,
+          }
+        }))
+    });
+
+    const { session }: { session: Stripe.Response<Stripe.Checkout.Session> } = await res.json();
+
+    await stripe.redirectToCheckout({sessionId: session.id});
+  };
 
   return (
     <div className="col-span-2">
@@ -41,6 +86,9 @@ const CartContent = () => {
           </li>
         ))}
       </ul>
+      <div className="flex justify-end">
+        <button onClick={pay} type="button" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 border border-blue-700 rounded">Confirm button</button>
+      </div>
     </div>
   );
 };
